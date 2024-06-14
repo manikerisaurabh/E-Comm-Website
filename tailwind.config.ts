@@ -8,7 +8,16 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      
+      colors:{
+        accept:'#0989ff',
+        topHeadingPrimary:'#010f1c',
+        topHeadingSecondary:'#021d35',
+        pink:'#FD4B6B',
+      },
+      container:{
+        center:true,
+        padding:'15px',
+      }
     },
   },
   plugins: [],
