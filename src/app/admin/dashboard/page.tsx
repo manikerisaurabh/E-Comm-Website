@@ -4,35 +4,43 @@ import Popup from "@/components/admin-panel/Popup";
 import ProductRow from "@/components/admin-panel/ProductRow";
 import { setLoading } from "@/redux/features/loadingSlice";
 import { useAppDispatch } from "@/redux/hooks";
-import axios from "axios";
 import { useEffect, useState } from "react";
 
 export interface IProduct {
-    _id:string,
-    imgSrc:string,
-    filekey:string,
-    name:string,
-    price:string,
-    category:string,
+    _id: string;
+    imgSrc: string;
+    filekey: string;
+    name: string;
+    price: string;
+    category: string;
 }
 
 const Dashboard = () => {
-
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState<IProduct[]>([]);
     const [openPopup, setOpenPopup] = useState(false);
     const [updateTable, setUpdateTable] = useState(false);
 
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(setLoading(true));
+        const fetchProducts = async () => {
+            dispatch(setLoading(true));
+            try {
+                const response = await fetch('http://localhost:3000/api/get_products');
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+                const data: IProduct[] = await response.json();
+                setProducts(data);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            } finally {
+                dispatch(setLoading(false));
+            }
+        };
 
-        axios
-            .get("/api/get_products")
-            .then((res)=> setProducts(res.data))
-            .catch((err) => console.log(err))
-            .finally(()=>dispatch(setLoading(false)));
-    }, [updateTable]);
+        fetchProducts();
+    }, [updateTable, dispatch]);
 
     return (
         <div className="bg-white h-[calc(100vh-38px)] rounded-lg p-4">
@@ -49,13 +57,13 @@ const Dashboard = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map((product: IProduct, index)=>(
+                        {products.map((product, index) => (
                             <ProductRow
-                            key={product._id}
-                            srNo={index+1}
-                            setOpenPopup={setOpenPopup}
-                            setUpdateTable={setUpdateTable}
-                            product={product}
+                                key={product._id}
+                                srNo={index + 1}
+                                setOpenPopup={setOpenPopup}
+                                setUpdateTable={setUpdateTable}
+                                product={product}
                             />
                         ))}
                     </tbody>

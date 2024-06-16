@@ -2,13 +2,14 @@ import { connectMongoDB } from '@/libs/MongoConnect';
 import Product from '@/libs/models/Product';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request:NextRequest){
-    try{
-        const body = await request.json()
-        const {imgSrc,filekey,name,category,price} = body;
+export async function POST(request: NextRequest) {
+    await connectMongoDB()
+    try {
+        const { imgSrc, filekey, name, category, price } = await request.json();
 
-        console.log(body)
-        await connectMongoDB()
+
+
+        console.log("this is body form add product route  : -->   " + imgSrc, filekey, name, category, price)
 
         const data = await Product.create({
             imgSrc,
@@ -18,14 +19,14 @@ export async function POST(request:NextRequest){
             price
         });
 
-        return NextResponse.json({msg:"Product added successfully",data})
-    }catch(error){
+        return NextResponse.json({ msg: "Product added successfully", data })
+    } catch (error) {
         return NextResponse.json({
             error,
-            msg:"Something Went Wrong"
+            msg: "Something Went Wrong"
         },
-        {status:400}
-    )
+            { status: 400 }
+        )
     }
 }
 
