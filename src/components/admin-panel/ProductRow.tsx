@@ -16,7 +16,7 @@ interface PropsType {
 const ProductRow = ({srNo, setOpenPopup, setUpdateTable, product}: PropsType) => {
     const dispatch = useAppDispatch()
     const onEdit = () => {
-        dispatch(setProduct (product))
+        dispatch(setProduct(product))
         setOpenPopup(true)
     }
 

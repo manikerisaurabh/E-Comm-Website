@@ -7,6 +7,7 @@ export async function POST(request:NextRequest){
         const body = await request.json()
         const {imgSrc,filekey,name,category,price} = body;
 
+        console.log(body)
         await connectMongoDB()
 
         const data = await Product.create({
@@ -27,3 +28,4 @@ export async function POST(request:NextRequest){
     )
     }
 }
+
